@@ -1,49 +1,239 @@
-### 📝 URA-F2022: Mathematical Handwriting Recognition Using Legendre-Sobolev Coefficients
+# InkML Converter - Mathematical Handwriting Recognition Preprocessing
 
-**1. Project Overview**
-This project focuses on developing a deep-learning system for online mathematical handwriting recognition (HWR). The core approach involves representing handwritten symbol curves in a low-dimensional vector space using coefficients from orthogonal polynomial series (specifically Legendre-Sobolev), enabling efficient and accurate real-time classification.
+## Overview
 
-**2. Methodology & Technical Approach**
+This project contains a TypeScript-based converter that transforms handwritten mathematical symbol data from plain text format to InkML format. This preprocessing step is essential for the mathematical handwriting recognition system that utilizes Legendre-Sobolev coefficients for feature extraction and classification.
 
-**2.1 Core Mathematical Foundation**
-The method is grounded in functional analysis. A handwritten stroke's x- and y-coordinates are treated as functions, `X(λ)` and `Y(λ)`, parameterized by arc length `λ`.
-*   **Inner Product & Basis:** An inner product is defined on the space of polynomials. The choice of inner product determines the orthogonal basis.
-*   **Weight Function `w(t)`:** The function `w(t)` in the inner product integral acts as a weighting factor across the domain. Different weights (e.g., `w(t)=1` for Legendre, `w(t)=1/√(1-t²)` for Chebyshev) lead to different orthogonal polynomial families (Legendre, Chebyshev, etc.).
-*   **Gram-Schmidt Orthogonalization:** The standard monomial basis `{1, t, t², ...}` is orthogonalized using the Gram-Schmidt process with respect to the chosen inner product to generate the specific orthogonal polynomial basis `{P₀(t), P₁(t), ..., P_d(t)}`.
+## Features
 
-**2.2 Legendre-Sobolev Representation**
-To better capture curve shape (not just position), a **Legendre-Sobolev inner product** is used. It incorporates information about the function's derivative:
-`<f, g> = ∫ f(t)g(t) dt + μ ∫ f'(t)g'(t) dt`
-where `μ` is a experimentally determined constant. The resulting **Legendre-Sobolev coefficients** provide a compact, rich feature vector for each curve.
+- Converts coordinate data from `.txt` files to standardized InkML format
+- Automatic decimal precision detection and adjustment
+- Proper XML structure with indentation
+- Batch processing capabilities
+- Integration-ready for Flask applications
 
-**2.3 Real-Time ("Online") Computation**
-A significant innovation is computing coefficients *as the stroke is being written*.
-1.  **Moment Calculation:** Numerical integrals (moments) of the form `∫ λᵏ X(λ) dλ` are updated with each new sampled point from the digitizer.
-2.  **Pen-Up Calculation:** When the pen is lifted, the known arc length `L` is used to scale the domain to `[-1, 1]`. The Legendre-Sobolev coefficient vector is then computed from the stored moments in constant time, independent of the number of sampled points.
+## Project Structure
 
-**2.4 Data Pipeline & Classification**
-*   **Dataset:** The work uses a corpus of isolated mathematical symbols (e.g., the "InkDB" corpus). For this project, data is organized by symbol class (e.g., 38 samples for each of 26 capital letters).
-*   **Preprocessing:** Each stroke trace is normalized: its centroid is translated to the origin, and it is scaled so its total arc length is 1.
-*   **Feature Vector:** The preprocessed `X(λ)` and `Y(λ)` functions are represented by their truncated Legendre-Sobolev coefficient vectors.
-*   **Classification:** These coefficient vectors reside in a Euclidean space. Classification can be performed by:
-    *   **Distance-Based Methods:** Measuring the distance from an unknown sample to the convex hull of nearest neighbor classes (found to be ~97.5% accurate).
-    *   **Support Vector Machines (SVM):** Training a classifier on the coefficient vectors.
+```
+Laura_Nguyen/
+├── convert_txt_to_inkml.ts    # Main conversion script
+├── run.sh                     # Automation script
+├── package.json               # Dependencies
+├── README.md                  # This file
+├── URA curve to vector notebook.ipynb  # Jupyter notebook for analysis
+└── inkml/                     # Output directory for converted files
+```
 
-**3. Key Tasks from Notes**
-- Read and implement algorithms from the foundational papers.
-- Process the ink data directory (`infCDB`), parsing ink files to organize data by symbol and stroke order.
-- Write code to calculate Legendre-Sobolev coefficients for a given set of `(x, y)` points.
-- Experiment with the calculated coefficient vectors for symbol classification.
+## Installation
 
-### 📚 References in IEEE Format
-Here are the core references for this methodology, cited in IEEE format with active links.
+1. Ensure you have Node.js and npm/yarn installed
+2. Clone the repository
+3. Install dependencies:
 
-[1] O. Golubitsky and S. M. Watt, "Online stroke modeling for handwriting recognition," in *Proc. Conf. Center Adv. Stud. Collaborative Res. (CASCON)*, Toronto, ON, Canada, 2008, pp. 85–99. [Online]. Available: http://cs.uwaterloo.ca/~smwatt/pub/reprints/2008-cascon-moments.pdf
+```bash
+npm install
+# OR
+yarn install
+```
 
-[2] O. Golubitsky and S. M. Watt, "Distance-based classification of handwritten symbols," *Int. J. Doc. Anal. Recognit.*, vol. 12, no. 2, pp. 133–146, Sep. 2009. [Online]. Available: http://cs.uwaterloo.ca/~smwatt/pub/reprints/2009-ijdar-similarity.pdf
+## Usage
 
-[3] P. Alvandi and S. M. Watt, "Real-time computation of Legendre-Sobolev approximations," in *Proc. 20th Int. Symp. Symbolic Numeric Algorithms Sci. Comput. (SYNASC)*, Timisoara, Romania, 2018, pp. 167–174. [Online]. Available: http://cs.uwaterloo.ca/~smwatt/pub/reprints/2018-synasc-real-time-ls.pdf
+### Command Line Conversion
 
-[4] S. M. Watt, "The mathematics of mathematical handwriting recognition," presented at the *Theor. Issues Read. Instr. Comput. Syst. Semin. (TRICS)*, Univ. Western Ontario, London, ON, Canada, Sep. 15, 2010. [Online]. Available: https://cs.uwaterloo.ca/~smwatt/talks/2010-trics-math-of-mathhwr-talk.pdf
+Convert individual files:
 
-I hope this structured document serves as a clear foundation for your project. Would you like to delve deeper into any specific section, such as the algorithmic details of the Gram-Schmidt process for Legendre-Sobolev polynomials or the specifics of the convex hull classification method?
+```bash
+npx tsx convert_txt_to_inkml.ts path/to/input.txt
+```
+
+Batch convert all files in the dataset:
+
+```bash
+./run.sh
+```
+
+### Python Flask Integration
+
+The following Python code demonstrates how to integrate the conversion functionality with a Flask application:
+
+```python
+import os
+import subprocess
+import tempfile
+from flask import Flask, request, jsonify, send_file
+import json
+
+class InkMLConverter:
+    """
+    A wrapper class to interface with the TypeScript InkML converter
+    """
+    
+    def __init__(self, converter_script_path=None):
+        self.converter_script = converter_script_path or "./convert_txt_to_inkml.ts"
+        
+    def convert_txt_to_inkml(self, txt_file_path):
+        """
+        Convert a single TXT file to InkML format using the TypeScript converter
+        
+        Args:
+            txt_file_path (str): Path to the input TXT file
+            
+        Returns:
+            str: Path to the generated InkML file
+        """
+        try:
+            # Run the TypeScript converter
+            result = subprocess.run([
+                "npx", "tsx", self.converter_script, txt_file_path
+            ], capture_output=True, text=True, check=True)
+            
+            # Generate expected output path (same name, different extension)
+            inkml_file_path = txt_file_path.rsplit('.', 1)[0] + '.inkml'
+            
+            return inkml_file_path
+        except subprocess.CalledProcessError as e:
+            raise Exception(f"Conversion failed: {e.stderr}")
+    
+    def convert_from_string(self, txt_content, output_filename=None):
+        """
+        Convert TXT content from a string to InkML format
+        
+        Args:
+            txt_content (str): Content of the TXT file as a string
+            output_filename (str): Desired output filename (without extension)
+            
+        Returns:
+            str: Path to the generated InkML file
+        """
+        # Create a temporary file with the content
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as temp_file:
+            temp_file.write(txt_content)
+            temp_file_path = temp_file.name
+        
+        try:
+            # Convert the temporary file
+            inkml_path = self.convert_txt_to_inkml(temp_file_path)
+            
+            # If a custom output filename was provided, rename the result
+            if output_filename:
+                new_inkml_path = temp_file_path.rsplit('.', 1)[0] + '_' + output_filename + '.inkml'
+                os.rename(inkml_path, new_inkml_path)
+                return new_inkml_path
+            
+            return inkml_path
+        finally:
+            # Clean up temporary file
+            if os.path.exists(temp_file_path):
+                os.remove(temp_file_path)
+
+
+# Flask Application Example
+app = Flask(__name__)
+converter = InkMLConverter()
+
+@app.route('/convert', methods=['POST'])
+def convert_txt_to_inkml():
+    """
+    Endpoint to convert TXT content to InkML format
+    
+    Expected payload:
+    {
+        "txt_content": "String content of the TXT file",
+        "filename": "optional filename for output"
+    }
+    """
+    try:
+        data = request.get_json()
+        
+        if not data or 'txt_content' not in data:
+            return jsonify({"error": "Missing txt_content in request body"}), 400
+        
+        txt_content = data['txt_content']
+        filename = data.get('filename', None)
+        
+        # Convert the content
+        inkml_path = converter.convert_from_string(txt_content, filename)
+        
+        # Return the converted file
+        return send_file(inkml_path, as_attachment=True, download_name=os.path.basename(inkml_path))
+        
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/convert_file', methods=['POST'])
+def convert_uploaded_file():
+    """
+    Endpoint to convert an uploaded TXT file to InkML format
+    """
+    if 'file' not in request.files:
+        return jsonify({"error": "No file provided"}), 400
+    
+    file = request.files['file']
+    
+    if file.filename == '' or not file.filename.endswith('.txt'):
+        return jsonify({"error": "Invalid file type. Please upload a .txt file"}), 400
+    
+    try:
+        # Save uploaded file temporarily
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as temp_file:
+            file.save(temp_file.name)
+            temp_file_path = temp_file.name
+        
+        # Convert the file
+        inkml_path = converter.convert_txt_to_inkml(temp_file_path)
+        
+        # Clean up temporary input file
+        os.remove(temp_file_path)
+        
+        # Return the converted file
+        return send_file(inkml_path, as_attachment=True, download_name=file.filename.replace('.txt', '.inkml'))
+        
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/', methods=['GET'])
+def home():
+    """
+    Home endpoint with API documentation
+    """
+    return jsonify({
+        "message": "InkML Converter API",
+        "endpoints": {
+            "POST /convert": "Convert TXT content to InkML (JSON payload)",
+            "POST /convert_file": "Upload and convert a TXT file to InkML"
+        },
+        "description": "This service converts handwritten mathematical symbol data from TXT format to InkML format for use in mathematical handwriting recognition systems."
+    })
+
+if __name__ == '__main__':
+    app.run(debug=True)
+```
+
+## Methodology
+
+This project is part of a larger research effort in mathematical handwriting recognition using Legendre-Sobolev coefficients. The conversion to InkML format enables:
+
+- Standardized representation of handwritten mathematical symbols
+- Preservation of temporal and spatial information
+- Compatibility with various machine learning frameworks
+- Efficient feature extraction for classification
+
+## Technical Details
+
+The converter implements several key features:
+
+- **Decimal Precision Detection**: Automatically detects and maintains appropriate decimal precision
+- **Stroke Separation**: Properly handles multiple strokes within a single symbol
+- **XML Formatting**: Generates properly structured InkML with correct indentation
+- **Batch Processing**: Capable of processing entire datasets efficiently
+
+## Future Enhancements
+
+- Add validation for input TXT format
+- Implement error handling for malformed input
+- Add support for additional input formats
+- Optimize for large-scale batch processing
+
+## Credits
+
+Implemented by Laura Nguyen as part of URA-F2022: Mathematical Handwriting Recognition Using Legendre-Sobolev Coefficients.
