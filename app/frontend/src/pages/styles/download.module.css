@@ -1,0 +1,379 @@
+.page {
+  min-height: 100vh;
+  position: relative;
+  padding-top: 90px; /* Account for fixed navbar */
+}
+
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.hero {
+  text-align: center;
+  padding: 4rem 0;
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 1rem;
+  letter-spacing: 2px;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  color: #cccccc;
+  margin-bottom: 2rem;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.section {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sectionTitle {
+  font-size: 2rem;
+  color: #00d4ff;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.releaseCard {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+.releaseInfo h3 {
+  color: #00d4ff;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.releaseDate {
+  color: #888;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.releaseDesc {
+  color: #d0d0d0;
+  line-height: 1.5;
+  max-width: 500px;
+}
+
+.downloadActions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+
+.downloadBtn {
+  background: linear-gradient(135deg, #00d4ff, #0099cc);
+  color: #ffffff;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-align: center;
+  min-width: 150px;
+}
+
+.downloadBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);
+}
+
+.releaseNotes {
+  color: #00d4ff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.releaseNotes:hover {
+  color: #ffffff;
+}
+
+.requirements {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.reqCard {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.reqCard h3 {
+  color: #00d4ff;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.reqCard ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.reqCard li {
+  color: #d0d0d0;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.reqCard li:before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: #00d4ff;
+  font-weight: bold;
+}
+
+.reqCard li:last-child {
+  border-bottom: none;
+}
+
+.installMethods {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.methodCard {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s ease;
+}
+
+.methodCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(0, 212, 255, 0.3);
+}
+
+.methodCard h3 {
+  color: #00d4ff;
+  font-size: 1.3rem;
+  margin-bottom: 0.8rem;
+  font-weight: 600;
+}
+
+.methodCard p {
+  color: #d0d0d0;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.methodSteps {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.methodSteps span {
+  color: #888;
+  font-size: 0.9rem;
+  padding-left: 1rem;
+  position: relative;
+}
+
+.methodSteps span:before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: #00d4ff;
+}
+
+.methodBtn {
+  background: rgba(0, 212, 255, 0.1);
+  color: #00d4ff;
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: inline-block;
+  border: 1px solid rgba(0, 212, 255, 0.3);
+}
+
+.methodBtn:hover {
+  background: rgba(0, 212, 255, 0.2);
+  color: #ffffff;
+}
+
+.devBuilds {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.buildCard {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s ease;
+}
+
+.buildCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(0, 212, 255, 0.3);
+}
+
+.buildCard h3 {
+  color: #00d4ff;
+  font-size: 1.3rem;
+  margin-bottom: 0.8rem;
+  font-weight: 600;
+}
+
+.buildCard p {
+  color: #d0d0d0;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.buildInfo {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.buildStatus {
+  background: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+  padding: 0.3rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.buildDate {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.buildBtn {
+  background: rgba(255, 193, 7, 0.1);
+  color: #ffc107;
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: inline-block;
+  border: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+.buildBtn:hover {
+  background: rgba(255, 193, 7, 0.2);
+  color: #ffffff;
+}
+
+.help {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.helpCard {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s ease;
+}
+
+.helpCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(0, 212, 255, 0.3);
+}
+
+.helpCard h3 {
+  color: #00d4ff;
+  font-size: 1.3rem;
+  margin-bottom: 0.8rem;
+  font-weight: 600;
+}
+
+.helpCard p {
+  color: #d0d0d0;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.helpLink {
+  color: #00d4ff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.helpLink:hover {
+  color: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding: 1rem;
+  }
+  
+  .title {
+    font-size: 2rem;
+  }
+  
+  .section {
+    padding: 1.5rem;
+  }
+  
+  .releaseCard {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .requirements {
+    grid-template-columns: 1fr;
+  }
+  
+  .installMethods {
+    grid-template-columns: 1fr;
+  }
+  
+  .devBuilds {
+    grid-template-columns: 1fr;
+  }
+  
+  .help {
+    grid-template-columns: 1fr;
+  }
+}
